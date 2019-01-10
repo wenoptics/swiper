@@ -3,11 +3,11 @@
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * http://www.idangero.us/swiper/
  *
- * Copyright 2014-2018 Vladimir Kharlampidi
+ * Copyright 2014-2019 Vladimir Kharlampidi
  *
  * Released under the MIT License
  *
- * Released on: December 19, 2018
+ * Released on: January 10, 2019
  */
 
 (function (global, factory) {
@@ -7642,7 +7642,7 @@
   };
 
   var Coverflow = {
-    setTranslate: function setTranslate() {
+    transitToTranslate: function transitToTranslate(progress) { // progress range: 0-1
       var swiper = this;
       var swiperWidth = swiper.width;
       var swiperHeight = swiper.height;
@@ -7659,16 +7659,18 @@
       for (var i = 0, length = slides.length; i < length; i += 1) {
         var $slideEl = slides.eq(i);
         var slideSize = slidesSizesGrid[i];
-        var slideOffset = $slideEl[0].swiperSlideOffset;
+        var slideOffset = $slideEl[0].swiperSlideOffset * progress;
         var offsetMultiplier = ((center - slideOffset - (slideSize / 2)) / slideSize) * params.modifier;
 
         var rotateY = isHorizontal ? rotate * offsetMultiplier : 0;
         var rotateX = isHorizontal ? 0 : rotate * offsetMultiplier;
+
         // var rotateZ = 0
         var translateZ = -translate * Math.abs(offsetMultiplier);
 
         var translateY = isHorizontal ? 0 : params.stretch * (offsetMultiplier);
         var translateX = isHorizontal ? params.stretch * (offsetMultiplier) : 0;
+
 
         // Fix for ultra small values
         if (Math.abs(translateX) < 0.001) { translateX = 0; }
@@ -7704,6 +7706,10 @@
         ws.perspectiveOrigin = center + "px 50%";
       }
     },
+    setTranslate: function setTranslate() {
+      var swiper = this;
+      swiper.coverflowEffect.transitToTranslate(1);
+    },
     setTransition: function setTransition(duration) {
       var swiper = this;
       swiper.slides
@@ -7721,7 +7727,7 @@
         stretch: 0,
         depth: 100,
         modifier: 1,
-        slideShadows: true,
+        slideShadows: true
       },
     },
     create: function create() {
@@ -7730,6 +7736,11 @@
         coverflowEffect: {
           setTranslate: Coverflow.setTranslate.bind(swiper),
           setTransition: Coverflow.setTransition.bind(swiper),
+        },
+      });
+      Utils.extend(swiper, {
+        coverflowEffect: {
+          transitToTranslate: Coverflow.transitToTranslate.bind(swiper),
         },
       });
     },

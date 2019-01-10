@@ -1,3 +1,9 @@
+# Custom Build
+
+[wenop] Custom build for plugin dev purpose. 
+
+
+
 [![Join the chat at https://gitter.im/nolimits4web/Swiper](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/nolimits4web/Swiper)
 [![Build Status](https://travis-ci.org/nolimits4web/swiper.svg?branch=master)](https://travis-ci.org/nolimits4web/swiper)
 [![devDependency Status](https://david-dm.org/nolimits4web/swiper/dev-status.svg)](https://david-dm.org/nolimits4web/swiper#info=devDependencies)

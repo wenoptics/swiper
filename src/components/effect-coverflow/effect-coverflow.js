@@ -3,7 +3,7 @@ import Support from '../../utils/support';
 import Utils from '../../utils/utils';
 
 const Coverflow = {
-  setTranslate() {
+  transitToTranslate(progress) { // progress range: 0-1
     const swiper = this;
     const {
       width: swiperWidth, height: swiperHeight, slides, $wrapperEl, slidesSizesGrid,
@@ -18,11 +18,12 @@ const Coverflow = {
     for (let i = 0, length = slides.length; i < length; i += 1) {
       const $slideEl = slides.eq(i);
       const slideSize = slidesSizesGrid[i];
-      const slideOffset = $slideEl[0].swiperSlideOffset;
+      const slideOffset = $slideEl[0].swiperSlideOffset * progress;
       const offsetMultiplier = ((center - slideOffset - (slideSize / 2)) / slideSize) * params.modifier;
 
       let rotateY = isHorizontal ? rotate * offsetMultiplier : 0;
       let rotateX = isHorizontal ? 0 : rotate * offsetMultiplier;
+
       // var rotateZ = 0
       let translateZ = -translate * Math.abs(offsetMultiplier);
 
@@ -63,6 +64,10 @@ const Coverflow = {
       ws.perspectiveOrigin = `${center}px 50%`;
     }
   },
+  setTranslate() {
+    const swiper = this;
+    swiper.coverflowEffect.transitToTranslate(1);
+  },
   setTransition(duration) {
     const swiper = this;
     swiper.slides
@@ -80,7 +85,7 @@ export default {
       stretch: 0,
       depth: 100,
       modifier: 1,
-      slideShadows: true,
+      slideShadows: true
     },
   },
   create() {
@@ -89,6 +94,11 @@ export default {
       coverflowEffect: {
         setTranslate: Coverflow.setTranslate.bind(swiper),
         setTransition: Coverflow.setTransition.bind(swiper),
+      },
+    });
+    Utils.extend(swiper, {
+      coverflowEffect: {
+        transitToTranslate: Coverflow.transitToTranslate.bind(swiper),
       },
     });
   },

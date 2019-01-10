@@ -3,11 +3,11 @@
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * http://www.idangero.us/swiper/
  *
- * Copyright 2014-2018 Vladimir Kharlampidi
+ * Copyright 2014-2019 Vladimir Kharlampidi
  *
  * Released under the MIT License
  *
- * Released on: December 19, 2018
+ * Released on: January 10, 2019
  */
 
 import { $, addClass, removeClass, hasClass, toggleClass, attr, removeAttr, data, transform, transition, on, off, trigger, transitionEnd, outerWidth, outerHeight, offset, css, each, html, text, is, index, eq, append, prepend, next, nextAll, prev, prevAll, parent, parents, closest, find, children, remove, add, styles } from 'dom7/dist/dom7.modular';
@@ -6680,7 +6680,7 @@ var EffectFlip = {
 };
 
 const Coverflow = {
-  setTranslate() {
+  transitToTranslate(progress) { // progress range: 0-1
     const swiper = this;
     const {
       width: swiperWidth, height: swiperHeight, slides, $wrapperEl, slidesSizesGrid,
@@ -6695,16 +6695,18 @@ const Coverflow = {
     for (let i = 0, length = slides.length; i < length; i += 1) {
       const $slideEl = slides.eq(i);
       const slideSize = slidesSizesGrid[i];
-      const slideOffset = $slideEl[0].swiperSlideOffset;
+      const slideOffset = $slideEl[0].swiperSlideOffset * progress;
       const offsetMultiplier = ((center - slideOffset - (slideSize / 2)) / slideSize) * params.modifier;
 
       let rotateY = isHorizontal ? rotate * offsetMultiplier : 0;
       let rotateX = isHorizontal ? 0 : rotate * offsetMultiplier;
+
       // var rotateZ = 0
       let translateZ = -translate * Math.abs(offsetMultiplier);
 
       let translateY = isHorizontal ? 0 : params.stretch * (offsetMultiplier);
       let translateX = isHorizontal ? params.stretch * (offsetMultiplier) : 0;
+
 
       // Fix for ultra small values
       if (Math.abs(translateX) < 0.001) translateX = 0;
@@ -6740,6 +6742,10 @@ const Coverflow = {
       ws.perspectiveOrigin = `${center}px 50%`;
     }
   },
+  setTranslate() {
+    const swiper = this;
+    swiper.coverflowEffect.transitToTranslate(1);
+  },
   setTransition(duration) {
     const swiper = this;
     swiper.slides
@@ -6757,7 +6763,7 @@ var EffectCoverflow = {
       stretch: 0,
       depth: 100,
       modifier: 1,
-      slideShadows: true,
+      slideShadows: true
     },
   },
   create() {
@@ -6766,6 +6772,11 @@ var EffectCoverflow = {
       coverflowEffect: {
         setTranslate: Coverflow.setTranslate.bind(swiper),
         setTransition: Coverflow.setTransition.bind(swiper),
+      },
+    });
+    Utils.extend(swiper, {
+      coverflowEffect: {
+        transitToTranslate: Coverflow.transitToTranslate.bind(swiper),
       },
     });
   },
