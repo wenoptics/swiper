@@ -1,13 +1,42 @@
-# Custom Build
+# Swiper Custom Build
 
 [wenop] Custom build for plugin dev purpose. 
 
+## In this variation
 
+[`effect-coverflows`](src/components/effect-coverflow/effect-coverflow.js) are supported custom transitions to a transition state.
 
-[![Join the chat at https://gitter.im/nolimits4web/Swiper](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/nolimits4web/Swiper)
-[![Build Status](https://travis-ci.org/nolimits4web/swiper.svg?branch=master)](https://travis-ci.org/nolimits4web/swiper)
-[![devDependency Status](https://david-dm.org/nolimits4web/swiper/dev-status.svg)](https://david-dm.org/nolimits4web/swiper#info=devDependencies)
-[![jsDelivr Hits](https://data.jsdelivr.com/v1/package/npm/swiper/badge?style=rounded)](https://www.jsdelivr.com/package/npm/swiper)
+To set a transition progress, call `swiper.transitToTranslate(progressVal)`. `progressVal` is range from 0 to 1
+
+ ### Corresponding settings:
+ 
+```js
+coverflowEffect: {
+  rotate: 50,
+    stretch: 0,
+    depth: 100,
+    modifier: 1,
+    slideShadows: false,
+    
+    // new 
+    transit: {
+      omitActiveSlide: {
+        scale: true,
+        opacity: true,
+      },
+      duration: {
+        scale: 0.5,
+        opacity: 0.7
+      }
+    }
+}
+```
+
+### Test Example
+
+See [`245-effect-pileflow.html`](demos/245-effect-pileflow.html)
+
+---
 
 Swiper
 ==========

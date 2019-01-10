@@ -6691,22 +6691,37 @@ const Coverflow = {
     const center = isHorizontal ? -transform$$1 + (swiperWidth / 2) : -transform$$1 + (swiperHeight / 2);
     const rotate = isHorizontal ? params.rotate : -params.rotate;
     const translate = params.depth;
+    const opacityDuration = swiper.params.coverflowEffect.transit.duration.opacity;
+    const opacityInterval = (1 - opacityDuration) / swiper.params.slidesPerView;
+    const scaleDuration = swiper.params.coverflowEffect.transit.duration.scale;
+    const scaleInterval = (1 - scaleDuration) / swiper.params.slidesPerView;
     // Each slide offset from center
     for (let i = 0, length = slides.length; i < length; i += 1) {
       const $slideEl = slides.eq(i);
       const slideSize = slidesSizesGrid[i];
-      const slideOffset = $slideEl[0].swiperSlideOffset * progress;
+
+      // `slideOffset` is fix according to the order a slide
+      const slideOffset = $slideEl[0].swiperSlideOffset;
+      // slideOffset -= (1 - progress) * (slideOffset - slides.eq(0)[0].swiperSlideOffset);
+      // $slideEl.attr('slideOffset', slideOffset);
+
       const offsetMultiplier = ((center - slideOffset - (slideSize / 2)) / slideSize) * params.modifier;
+      // $slideEl.attr('offsetMultiplier', offsetMultiplier);
 
       let rotateY = isHorizontal ? rotate * offsetMultiplier : 0;
       let rotateX = isHorizontal ? 0 : rotate * offsetMultiplier;
+
+      // Apply progress
+      rotateX *= progress;
+      rotateY *= progress;
 
       // var rotateZ = 0
       let translateZ = -translate * Math.abs(offsetMultiplier);
 
       let translateY = isHorizontal ? 0 : params.stretch * (offsetMultiplier);
       let translateX = isHorizontal ? params.stretch * (offsetMultiplier) : 0;
-
+      translateY *= progress;
+      translateX *= progress;
 
       // Fix for ultra small values
       if (Math.abs(translateX) < 0.001) translateX = 0;
@@ -6715,10 +6730,32 @@ const Coverflow = {
       if (Math.abs(rotateY) < 0.001) rotateY = 0;
       if (Math.abs(rotateX) < 0.001) rotateX = 0;
 
-      const slideTransform = `translate3d(${translateX}px,${translateY}px,${translateZ}px)  rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      // Add `scale` variations for animation effects - wenop
+      let scale = 1;
+      if (!(Math.round(offsetMultiplier) === 0 && swiper.params.coverflowEffect.transit.omitActiveSlide.scale)) {
+        // offsetMultiplier as delays
+        scale = (progress - scaleInterval * Math.abs(offsetMultiplier)) / scaleDuration;
+        scale = Math.min(scale, 1);
+        scale = Math.max(scale, 0);
+      }
+
+      const slideTransform = `translate3d(${translateX}px,${translateY}px,${translateZ}px)  rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale},${scale})`;
 
       $slideEl.transform(slideTransform);
       $slideEl[0].style.zIndex = -Math.abs(Math.round(offsetMultiplier)) + 1;
+
+      // Add `opacity` variations to allow fade effects - wenop
+      if (!(Math.round(offsetMultiplier) === 0 && swiper.params.coverflowEffect.transit.omitActiveSlide.opacity)) {
+        // `opacity` without progress
+        let opacity = 1 - Math.abs(offsetMultiplier) / (swiper.params.slidesPerView + 1);
+
+        // Apply progress
+        // offsetMultiplier as delays
+        opacity *= (progress - opacityInterval * Math.abs(offsetMultiplier)) / opacityDuration;
+
+        $slideEl[0].style.opacity = opacity;
+      }
+
       if (params.slideShadows) {
         // Set shadows
         let $shadowBeforeEl = isHorizontal ? $slideEl.find('.swiper-slide-shadow-left') : $slideEl.find('.swiper-slide-shadow-top');
@@ -6763,7 +6800,17 @@ var effectCoverflow = {
       stretch: 0,
       depth: 100,
       modifier: 1,
-      slideShadows: true
+      slideShadows: false,
+      transit: {
+        omitActiveSlide: {
+          scale: true,
+          opacity: true,
+        },
+        duration: {
+          scale: 0.5,
+          opacity: 0.7,
+        },
+      },
     },
   },
   create() {
