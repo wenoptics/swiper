@@ -7752,7 +7752,8 @@
     },
     setTranslate: function setTranslate() {
       var swiper = this;
-      swiper.coverflowEffect.transitToTranslate(1);
+      // swiper.coverflowEffect.transitToTranslate(1);
+      swiper.coverflowEffect.transitToTranslate(swiper.ttTranslateValue);
     },
     setTransition: function setTransition(duration) {
       var swiper = this;

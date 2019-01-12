@@ -111,7 +111,8 @@ const Coverflow = {
   },
   setTranslate() {
     const swiper = this;
-    swiper.coverflowEffect.transitToTranslate(1);
+    // swiper.coverflowEffect.transitToTranslate(1);
+    swiper.coverflowEffect.transitToTranslate(swiper.ttTranslateValue);
   },
   setTransition(duration) {
     const swiper = this;
