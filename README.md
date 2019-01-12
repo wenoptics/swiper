@@ -6,7 +6,14 @@
 
 [`effect-coverflows`](src/components/effect-coverflow/effect-coverflow.js) are supported custom transitions to a transition state.
 
+#### Way 1:
+ 
 To set a transition progress, call `swiper.transitToTranslate(progressVal)`. `progressVal` is range from 0 to 1
+
+#### Way 2:
+
+Or assign progress value to `swiper.ttTranslateValue`, and call `swiper.coverflowEffect.updateTtTranslate()`. 
+ Which works well with value binding
 
  ### Corresponding settings:
  
@@ -31,6 +38,7 @@ coverflowEffect: {
     }
 }
 ```
+
 
 ### Test Example
 

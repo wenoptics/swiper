@@ -3,6 +3,11 @@ import Support from '../../utils/support';
 import Utils from '../../utils/utils';
 
 const Coverflow = {
+  updateTtTranslate() {
+    const swiper = this;
+    swiper.coverflowEffect.transitToTranslate(swiper.ttTranslateValue);
+    return swiper.ttTranslateValue;
+  },
   transitToTranslate(progress) { // progress range: 0-1
     const swiper = this;
     const {
@@ -101,6 +106,8 @@ const Coverflow = {
       const ws = $wrapperEl[0].style;
       ws.perspectiveOrigin = `${center}px 50%`;
     }
+
+    swiper.ttTranslateValue = progress;
   },
   setTranslate() {
     const swiper = this;
@@ -136,6 +143,7 @@ export default {
       },
     },
   },
+  ttTranslateValue: 1,
   create() {
     const swiper = this;
     Utils.extend(swiper, {
@@ -147,6 +155,7 @@ export default {
     Utils.extend(swiper, {
       coverflowEffect: {
         transitToTranslate: Coverflow.transitToTranslate.bind(swiper),
+        updateTtTranslate: Coverflow.updateTtTranslate.bind(swiper),
       },
     });
   },

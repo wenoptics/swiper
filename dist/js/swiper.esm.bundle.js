@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: January 10, 2019
+ * Released on: January 12, 2019
  */
 
 import { $, addClass, removeClass, hasClass, toggleClass, attr, removeAttr, data, transform, transition, on, off, trigger, transitionEnd, outerWidth, outerHeight, offset, css, each, html, text, is, index, eq, append, prepend, next, nextAll, prev, prevAll, parent, parents, closest, find, children, remove, add, styles } from 'dom7/dist/dom7.modular';
@@ -6680,6 +6680,11 @@ var EffectFlip = {
 };
 
 const Coverflow = {
+  updateTtTranslate() {
+    const swiper = this;
+    swiper.coverflowEffect.transitToTranslate(swiper.ttTranslateValue);
+    return swiper.ttTranslateValue;
+  },
   transitToTranslate(progress) { // progress range: 0-1
     const swiper = this;
     const {
@@ -6778,6 +6783,8 @@ const Coverflow = {
       const ws = $wrapperEl[0].style;
       ws.perspectiveOrigin = `${center}px 50%`;
     }
+
+    swiper.ttTranslateValue = progress;
   },
   setTranslate() {
     const swiper = this;
@@ -6813,6 +6820,7 @@ var EffectCoverflow = {
       },
     },
   },
+  ttTranslateValue: 1,
   create() {
     const swiper = this;
     Utils.extend(swiper, {
@@ -6824,6 +6832,7 @@ var EffectCoverflow = {
     Utils.extend(swiper, {
       coverflowEffect: {
         transitToTranslate: Coverflow.transitToTranslate.bind(swiper),
+        updateTtTranslate: Coverflow.updateTtTranslate.bind(swiper),
       },
     });
   },

@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: January 10, 2019
+ * Released on: January 12, 2019
  */
 
 (function (global, factory) {
@@ -7642,6 +7642,11 @@
   };
 
   var Coverflow = {
+    updateTtTranslate: function updateTtTranslate() {
+      var swiper = this;
+      swiper.coverflowEffect.transitToTranslate(swiper.ttTranslateValue);
+      return swiper.ttTranslateValue;
+    },
     transitToTranslate: function transitToTranslate(progress) { // progress range: 0-1
       var swiper = this;
       var swiperWidth = swiper.width;
@@ -7742,6 +7747,8 @@
         var ws = $wrapperEl[0].style;
         ws.perspectiveOrigin = center + "px 50%";
       }
+
+      swiper.ttTranslateValue = progress;
     },
     setTranslate: function setTranslate() {
       var swiper = this;
@@ -7777,6 +7784,7 @@
         },
       },
     },
+    ttTranslateValue: 1,
     create: function create() {
       var swiper = this;
       Utils.extend(swiper, {
@@ -7788,6 +7796,7 @@
       Utils.extend(swiper, {
         coverflowEffect: {
           transitToTranslate: Coverflow.transitToTranslate.bind(swiper),
+          updateTtTranslate: Coverflow.updateTtTranslate.bind(swiper),
         },
       });
     },
