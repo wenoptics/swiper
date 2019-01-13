@@ -73,16 +73,16 @@ const Coverflow = {
       $slideEl[0].style.zIndex = -Math.abs(Math.round(offsetMultiplier)) + 1;
 
       // Add `opacity` variations to allow fade effects - wenop
+      let opacity = 1;
       if (!(Math.round(offsetMultiplier) === 0 && swiper.params.coverflowEffect.transit.omitActiveSlide.opacity)) {
         // `opacity` without progress
-        let opacity = 1 - Math.abs(offsetMultiplier) / (swiper.params.slidesPerView + 1);
+        opacity = 1 - Math.abs(offsetMultiplier) / (swiper.params.slidesPerView + 1);
 
         // Apply progress
         // offsetMultiplier as delays
         opacity *= (progress - opacityInterval * Math.abs(offsetMultiplier)) / opacityDuration;
-
-        $slideEl[0].style.opacity = opacity;
       }
+      $slideEl[0].style.opacity = opacity;
 
       if (params.slideShadows) {
         // Set shadows
